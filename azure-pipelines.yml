@@ -1,0 +1,33 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+strategy:
+  matrix:
+    Python37:
+      python.version: '3.10'
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '$(python.version)'
+  displayName: 'Use Python $(python.version)'
+
+- script: |
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+  displayName: 'Install dependencies'
+
+- script: |
+    pip install pytest pytest-azurepipelines
+    pytest
+  displayName: 'pytest'
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'f231ecf7-d2da-4999-9062-528f2ceeaa1f'  # Azure service connection name
+    appName: 'pythonapp678'  # Name of your Azure App Service
+    package: '$(System.DefaultWorkingDirectory)'  # Path to the artifact (replace with your artifact name)
+    deploymentMethod: 'runFromPackage' # Deployment method (you can also use other methods like webDeploy or runFromPackage)
+  displayName: 'Deploy to Azure App Service'
