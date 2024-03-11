@@ -3,6 +3,7 @@ trigger:
 
 pool:
   vmImage: ubuntu-latest
+
 strategy:
   matrix:
     Python37:
@@ -28,6 +29,10 @@ steps:
   inputs:
     azureSubscription: 'f231ecf7-d2da-4999-9062-528f2ceeaa1f'  # Azure service connection name
     appName: 'pythonapp678'  # Name of your Azure App Service
-    package: '$(System.DefaultWorkingDirectory)'  # Path to the artifact (replace with your artifact name)
-    deploymentMethod: 'runFromPackage' # Deployment method (you can also use other methods like webDeploy or runFromPackage)
+    package: 'https://pipelineweb02.blob.core.windows.net/pythonweb?sp=racwdl&st=2024-03-11T08:58:40Z&se=2024-03-11T16:58:40Z&spr=https&sv=2022-11-02&sr=c&sig=RC4BQ0EJUBE5C7aYG9F5Z99c39YWFawFFPwIZFUPCwg%3D'  # Path to the artifact (replace with your artifact name)
+    deploymentMethod: 'runFromPackage' 
+    appType: 'webApp'  # Specify the application type (e.g., 'webApp', 'functionApp', etc.)
   displayName: 'Deploy to Azure App Service'
+  env:
+    client_id: $(client_id)
+    tenant_id: $(tenant_id)  
